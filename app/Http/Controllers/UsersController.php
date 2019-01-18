@@ -11,7 +11,7 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->middleware('auth', [
-            'except' => ['show', 'create', 'store']
+            'except' => ['show', 'create', 'store', 'index']
         ]);
 
         $this->middleware('guest', [
@@ -20,6 +20,14 @@ class UsersController extends Controller
 
     }
 
+    /**
+     * 用户列表页面
+     */
+    public function index()
+    {
+        $users = User::paginate(10);
+        return view('users.index', compact('users'));
+    }
 
     /**
      * 用户页面注册页面
