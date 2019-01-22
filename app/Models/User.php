@@ -58,5 +58,13 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * 获取用户发布的所有微博
+     */
+    public function feed()
+    {
+        return $this->statuses()->orderBy('created_at', 'desc');
+    }
+
 
 }
