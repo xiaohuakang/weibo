@@ -37,6 +37,57 @@ class User extends Authenticatable
     }
 
     /**
+     * 关联粉丝模型
+     */
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id');
+    }
+
+    public function followings()
+    {
+        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
+    }
+
+
+    /**
+     * 关注用户操作
+     * @param $user_ids 用户id
+     */
+    public function follow($user_ids)
+    {
+        if ( ! is_array($user_ids)) {
+            $user_ids = compact('user_ids');
+        }
+        $this->followings()->sync($user_ids, false);
+    }
+
+    /**
+     * 取消关注操作
+     * @param $user_ids 用户id
+     */
+    public function unfollow($user_ids)
+    {
+        if ( ! is_array($user_ids)) {
+            $user_ids = compact($user_ids);
+        }
+        $this->followings()->detach($user_ids);
+    }
+
+    /**
+     * 判断是否已关注
+     * @param $user_id 用户id
+     * @return mixed
+     */
+    public function isFollowing($user_id)
+    {
+        return $this->followings->contains($user_id);
+    }
+
+
+
+
+    /**
      * 获取 gravatar 头像
      */
     public function gravatar($size = '100')
