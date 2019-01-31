@@ -39,11 +39,14 @@ class User extends Authenticatable
     /**
      * 关联粉丝模型
      */
+
+    // 获取粉丝关系列表
     public function followers()
     {
-        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id');
+        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id')->withTimestamps();
     }
 
+    // 获取用户关注人列表
     public function followings()
     {
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
