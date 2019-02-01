@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -52,7 +53,6 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
     }
 
-
     /**
      * 关注用户操作
      * @param $user_ids 用户id
@@ -87,9 +87,6 @@ class User extends Authenticatable
         return $this->followings->contains($user_id);
     }
 
-
-
-
     /**
      * 获取 gravatar 头像
      */
@@ -111,13 +108,18 @@ class User extends Authenticatable
         });
     }
 
-
     /**
-     * 获取用户发布的所有微博
+     * 获取微博信息流
      */
     public function feed()
     {
-        return $this->statuses()->orderBy('created_at', 'desc');
+        // 获取所有关注用户的 ID
+        $user_ids = $this->followings->pluck('id')->toArray();
+
+        // 将当前用户 ID 追加到关注的用户 ID 数组中
+        array_push($user_ids, $this->id);
+
+        return Status::whereIn('user_id', $user_ids)->with('user')->orderBy('created_at', 'desc');
     }
 
 
