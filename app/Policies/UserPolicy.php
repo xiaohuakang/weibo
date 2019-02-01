@@ -32,4 +32,10 @@ class UserPolicy
     }
 
 
+    // 关注用户授权策略
+    public function follow (User $currentUser, User $user)
+    {
+        return $currentUser->id !== $user->id;
+    }
+
 }

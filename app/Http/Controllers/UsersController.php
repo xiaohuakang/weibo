@@ -160,6 +160,11 @@ class UsersController extends Controller
         return view('users.show_follow', compact('users', 'title'));
     }
 
+    /**
+     * 用户粉丝列表
+     * @param User $user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function followers(User $user)
     {
         $users = $user->followers()->paginate(15);
